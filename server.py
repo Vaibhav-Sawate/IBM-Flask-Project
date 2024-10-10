@@ -9,8 +9,12 @@ def home():
 
 @app.route('/emotionDetector', methods=['POST'])
 def detect_emotion():
-    text_to_analyze = request.json.get('text', '')
+    text_to_analyze = request.json.get('text', '').strip()
     response = emotion_detector(text_to_analyze)
+
+    # Check if the dominant emotion is None or if the status code is not 200
+    if response['dominant_emotion'] is None or status_code != 200:
+        return jsonify({"error": "Invalid text! Please try again."}), 400
 
     # Prepare the output format
     output = {
